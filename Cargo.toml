@@ -1,0 +1,8 @@
+[package]
+name = "monty-hall"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+good_lp = { version = "1.8.1", features = ["clarabel"], default-features = false }
+rand = "0.8.5"
