@@ -1,8 +1,16 @@
-use crate::game_tree::rules::{GameRules, State};
 use self::Player::{First, Second};
+use crate::game_tree::rules::{GameRules, State};
 
-#[derive(Debug, Default, Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash)]
-pub struct RockPaperScissors {}
+#[derive(Debug, Default, Copy, Clone, PartialOrd, PartialEq)]
+pub struct TwistedRockPaperScissors {
+    twist: f64,
+}
+
+impl TwistedRockPaperScissors {
+    pub fn new(twist: f64) -> Self {
+        Self { twist }
+    }
+}
 
 #[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq, Hash)]
 #[repr(u8)]
@@ -59,9 +67,13 @@ impl<const PLAYER: u8> From<PlayerGesture> for Intent<{ PLAYER }> {
     }
 }
 
-fn compare_gestures(a: PlayerGesture, b: PlayerGesture) -> f64 {
+fn compare_gestures(twist: f64, a: PlayerGesture, b: PlayerGesture) -> f64 {
     if a.to_gesture() == b.to_gesture() {
-        0.
+        if a.to_gesture() == 1 {
+            twist
+        } else {
+            0.
+        }
     } else if a.to_gesture() == (b.to_gesture() + 1) % 3 {
         1.
     } else {
@@ -69,12 +81,12 @@ fn compare_gestures(a: PlayerGesture, b: PlayerGesture) -> f64 {
     }
 }
 
-impl GameRules<PlayerGesture, Intent<0>, Intent<1>> for RockPaperScissors {
+impl GameRules<PlayerGesture, Intent<0>, Intent<1>> for TwistedRockPaperScissors {
     fn ask_arbiter(&self, moves: &[PlayerGesture]) -> State {
         match moves.len() {
             0 => State::FirstToMove,
             1 => State::SecondToMove,
-            2 => State::GameOver(compare_gestures(moves[0], moves[1])),
+            2 => State::GameOver(compare_gestures(self.twist, moves[0], moves[1])),
             _ => unreachable!(),
         }
     }

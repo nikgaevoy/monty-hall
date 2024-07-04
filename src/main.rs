@@ -1,6 +1,6 @@
 use crate::game_tree::GameTree;
 use crate::matrix_game::{reverse_game, solve_game};
-use games::{Guess, RockPaperScissors};
+use games::{Guess, RockPaperScissors, TwistedRockPaperScissors};
 
 mod game_tree;
 mod games;
@@ -15,6 +15,13 @@ fn main() {
     dbg!(solve_game(&reverse_game(&game)));
 
     let game = GameTree::from_rules(RockPaperScissors::default()).to_matrix();
+
+    dbg!(&game);
+
+    dbg!(solve_game(&game));
+    dbg!(solve_game(&reverse_game(&game)));
+
+    let game = GameTree::from_rules(TwistedRockPaperScissors::new(2.)).to_matrix();
 
     dbg!(&game);
 

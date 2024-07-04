@@ -23,6 +23,7 @@ pub fn reverse_game(game: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
     ans
 }
 
+/// Solves the matrix game for the columns' player, i.e., the second player
 pub fn solve_game(game: &Vec<Vec<f64>>) -> GameSolution {
     if game.is_empty() {
         return Default::default();
