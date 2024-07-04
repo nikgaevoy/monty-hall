@@ -1,4 +1,4 @@
-use good_lp::{clarabel, Expression, Solution, SolverModel, variable, Variable, variables};
+use good_lp::{clarabel, variable, variables, Expression, Solution, SolverModel, Variable};
 
 #[derive(Debug, Default, Clone, PartialOrd, PartialEq)]
 pub struct GameSolution {
@@ -11,7 +11,8 @@ fn row_expression(variables: &[Variable], row: &[f64]) -> Expression {
 }
 
 pub fn reverse_game(game: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
-    let mut ans = vec![vec![0.; game.len()]; game.iter().map(|row| row.len()).max().unwrap_or_default()];
+    let mut ans =
+        vec![vec![0.; game.len()]; game.iter().map(|row| row.len()).max().unwrap_or_default()];
 
     for (i, row) in game.iter().enumerate() {
         for (j, val) in row.iter().enumerate() {
@@ -28,9 +29,15 @@ pub fn solve_game(game: &Vec<Vec<f64>>) -> GameSolution {
     }
 
     variables! {problem: cost;}
-    let cols: Vec<Variable> = problem.add_vector(variable().bounds(0..=1), game.iter().map(|row| row.len()).max().unwrap());
+    let cols: Vec<Variable> = problem.add_vector(
+        variable().bounds(0..=1),
+        game.iter().map(|row| row.len()).max().unwrap(),
+    );
     let total_prob: Expression = cols.iter().sum();
-    let mut model = problem.minimise(cost).using(clarabel).with(total_prob.eq(1.));
+    let mut model = problem
+        .minimise(cost)
+        .using(clarabel)
+        .with(total_prob.eq(1.));
 
     for row in game {
         model = model.with(row_expression(&cols, row).leq(cost));

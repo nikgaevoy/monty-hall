@@ -6,3 +6,4 @@ edition = "2021"
 [dependencies]
 good_lp = { version = "1.8.1", features = ["clarabel"], default-features = false }
 rand = "0.8.5"
+float-cmp = "0.9.0"
